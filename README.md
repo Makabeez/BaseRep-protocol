@@ -1,36 +1,57 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🛡️ BaseRep Protocol
 
-## Getting Started
+**BaseRep Protocol** is a futuristic decentralized application (dApp) built on the **Base blockchain**. It serves as a reputation layer, allowing users to verify their on-chain identity, analyze their transaction history, and mint a permanent "Architect Rank" as a professional footprint.
 
-First, run the development server:
+> **Live Demo:** [https://baserep.xyz](https://baserep.xyz)
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+---
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🚀 Key Features
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+* **On-Chain DNA Analysis**: Real-time scanning of user transaction history on Base Mainnet to calculate a protocol reputation score.
+* **Dynamic Reputation Scoring**: A specialized algorithm that converts on-chain activity into a visual score (up to 1000).
+* **Rank Minting**: A one-click feature to mint an "Architect Rank" directly on Base for a nominal fee (0.10$ eq. in ETH), adding to the user's on-chain history.
+* **Farcaster Frame v2 Integration**: Fully compatible with Farcaster's newest protocol, allowing users to verify their rank directly within Warpcast.
+* **Cyberpunk Glassmorphism UI**: A high-performance, dark-mode interface designed for the 2026 Web3 aesthetic.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🛠️ Technical Stack
 
-## Learn More
+* **Framework**: Next.js 15 (App Router)
+* **Blockchain Integration**: Wagmi, Viem, and Ethers.js
+* **Wallet Connector**: RainbowKit
+* **Styling**: Tailwind CSS & Lucide Icons
+* **Deployment**: Hosted on a secure VPS with PM2 process management
 
-To learn more about Next.js, take a look at the following resources:
+## 📦 Installation & Setup
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+1.  **Clone the Repository**:
+    ```bash
+    git clone [https://github.com/makabeez/baserep-protocol.git](https://github.com/makabeez/baserep-protocol.git)
+    cd baserep-protocol
+    ```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+2.  **Install Dependencies**:
+    ```bash
+    npm install
+    ```
 
-## Deploy on Vercel
+3.  **Configure Environment**:
+    Create a `.env.local` and add your RPC URLs and contract addresses.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+4.  **Run Development Mode**:
+    ```bash
+    npm run dev
+    ```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 📱 Mobile & Wallet Compatibility
+
+* **Base App**: Includes a `manifest.json` for seamless integration as a native-like app in Coinbase Wallet.
+* **Warpcast**: Features specific OpenGraph and Frame v2 metadata for interactive social sharing.
+
+---
+
+## 📄 License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+*Built with 💙 for the Base Ecosystem.*
