@@ -1,0 +1,16 @@
+{
+  "name": "BaseRep Protocol",
+  "short_name": "BaseRep",
+  "description": "Verify your on-chain reputation on Base.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#020202",
+  "theme_color": "#0052FF",
+  "icons": [
+    {
+      "src": "/og-image.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
