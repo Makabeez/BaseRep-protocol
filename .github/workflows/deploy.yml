@@ -19,11 +19,8 @@ jobs:
           username: ${{ secrets.USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: 22
-          # Force la connexion sans vérifier l'identité de l'hôte (évite le blocage initial)
-          proxy_ssh_common_args: "-o StrictHostKeyChecking=no"
-          script_stop: true
+          # On utilise les noms de paramètres exacts attendus par l'action
           script: |
-            echo "🚀 Connexion réussie !"
             cd /home/vps/baserep-protocol
             git pull origin main
             npm install
