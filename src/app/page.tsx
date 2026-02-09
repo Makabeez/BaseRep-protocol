@@ -4,7 +4,7 @@ import { useAccount, useSendTransaction } from 'wagmi';
 import { useEffect, useState } from 'react';
 import { ethers } from 'ethers';
 import { parseEther } from 'viem';
-import { ShieldCheck, Activity, ArrowRight, Globe, Zap, Layers, Cpu } from 'lucide-react';
+import { ShieldCheck, Activity, ArrowRight, Trophy, Share2 } from 'lucide-react';
 
 export default function Home() {
   const { address, isConnected } = useAccount();
@@ -14,6 +14,13 @@ export default function Home() {
 
   // OFFICIAL RECIPIENT ADDRESS
   const MY_WALLET = "0x2f225F8A538e7fD613e8ba79DCDdC7D1422AEd1C"; 
+
+  // MOCK LEADERBOARD DATA
+  const leaders = [
+    { addr: "0x2f22...Ed1C", rank: "Elite Architect", score: 1000 },
+    { addr: "0x89b2...4f12", rank: "Elite Architect", score: 980 },
+    { addr: "0x33c1...99aa", rank: "Base Builder", score: 750 },
+  ];
 
   useEffect(() => {
     async function getScore() {
@@ -33,92 +40,103 @@ export default function Home() {
   const handleMint = () => {
     sendTransaction({
       to: MY_WALLET as `0x${string}`,
-      value: parseEther('0.00004'), // Approx 0.10$ USD in ETH on Base
+      value: parseEther('0.00004'), // Approx 0.10$ USD
     });
   };
 
-  return (
-    <main style={{ backgroundColor: '#020202', minHeight: '100vh', color: 'white', overflow: 'hidden', position: 'relative', fontFamily: 'sans-serif' }}>
-      {/* High-Tech Glow Effects */}
-      <div style={{ position: 'absolute', top: '-15%', left: '5%', width: '700px', height: '700px', background: 'radial-gradient(circle, rgba(0,82,255,0.12) 0%, transparent 70%)', filter: 'blur(80px)', pointerEvents: 'none' }} />
-      <div style={{ position: 'absolute', bottom: '-15%', right: '5%', width: '700px', height: '700px', background: 'radial-gradient(circle, rgba(99,102,241,0.08) 0%, transparent 70%)', filter: 'blur(80px)', pointerEvents: 'none' }} />
+  const handleShareWarpcast = () => {
+    const text = `🛡️ My BaseRep Protocol Score is ${score}/1000!%0A%0AAnalyze your on-chain DNA and claim your rank at https://baserep.xyz%0A%0A@base @jessepollak #BaseRep`;
+    window.open(`https://warpcast.com/~/compose?text=${text}`, '_blank');
+  };
 
-      {/* Futuristic Navbar */}
+  const handleShareX = () => {
+    const text = `🛡️ My BaseRep Protocol Score is ${score}/1000!%0A%0AAnalyze your on-chain DNA at https://baserep.xyz%0A%0A@base @jessepollak #BaseRep #BuildOnBase`;
+    window.open(`https://twitter.com/intent/tweet?text=${text}`, '_blank');
+  };
+
+  return (
+    <main style={{ backgroundColor: '#020202', minHeight: '100vh', color: 'white', overflowX: 'hidden', position: 'relative', fontFamily: 'sans-serif', paddingBottom: '100px' }}>
+      {/* Background Glows */}
+      <div style={{ position: 'absolute', top: '-10%', left: '5%', width: '600px', height: '600px', background: 'radial-gradient(circle, rgba(0,82,255,0.08) 0%, transparent 70%)', filter: 'blur(80px)', pointerEvents: 'none' }} />
+      <div style={{ position: 'absolute', bottom: '10%', right: '5%', width: '600px', height: '600px', background: 'radial-gradient(circle, rgba(99,102,241,0.05) 0%, transparent 70%)', filter: 'blur(80px)', pointerEvents: 'none' }} />
+
       <nav style={{ padding: '20px 40px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid rgba(255,255,255,0.05)', backdropFilter: 'blur(20px)', zIndex: 100, position: 'relative' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-          <div style={{ padding: '8px', background: '#0052FF', borderRadius: '10px', boxShadow: '0 0 25px rgba(0,82,255,0.5)' }}>
-            <ShieldCheck size={22} color="white" />
+          <div style={{ padding: '8px', background: '#0052FF', borderRadius: '10px' }}>
+            <ShieldCheck size={20} color="white" />
           </div>
-          <span style={{ fontSize: '1.3rem', fontWeight: '900', letterSpacing: '-1.2px', fontStyle: 'italic', textTransform: 'uppercase' }}>BASEREP</span>
+          <span style={{ fontSize: '1.2rem', fontWeight: '900', letterSpacing: '-1px', fontStyle: 'italic', textTransform: 'uppercase' }}>BASEREP</span>
         </div>
         <ConnectButton label="Verify Identity" />
       </nav>
 
-      {/* Main UI Container */}
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', marginTop: '60px', position: 'relative', zIndex: 10, padding: '0 20px' }}>
-        <div style={{ background: 'rgba(10, 10, 10, 0.8)', border: '1px solid rgba(255,255,255,0.08)', padding: '50px', borderRadius: '45px', maxWidth: '850px', width: '100%', backdropFilter: 'blur(40px)', boxShadow: '0 40px 100px -20px rgba(0,0,0,0.8)' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '60px', position: 'relative', zIndex: 10, padding: '0 20px' }}>
+        
+        {/* Main Card */}
+        <div style={{ background: 'rgba(15, 15, 15, 0.6)', border: '1px solid rgba(255,255,255,0.08)', padding: '50px', borderRadius: '40px', maxWidth: '850px', width: '100%', backdropFilter: 'blur(40px)', marginBottom: '50px' }}>
           
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#3B82F6', fontSize: '10px', fontWeight: 'bold', letterSpacing: '4px', marginBottom: '25px', opacity: 0.8 }}>
-            <Activity size={12} className="animate-pulse" /> ENGINE ONLINE // BASE MAINNET
+          <div style={{ color: '#3B82F6', fontSize: '10px', fontWeight: 'bold', letterSpacing: '3px', marginBottom: '25px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <Activity size={12} /> ENGINE ONLINE // BASE MAINNET
           </div>
 
-          <h1 style={{ fontSize: '4.5rem', fontWeight: '900', lineHeight: '0.85', marginBottom: '35px', letterSpacing: '-4px' }}>
-            Elevate Your <br/>
-            <span style={{ background: 'linear-gradient(to right, #60A5FA, #3B82F6, #818CF8)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
-               On-Chain DNA.
-            </span>
+          <h1 style={{ fontSize: '4rem', fontWeight: '900', lineHeight: '1', marginBottom: '40px', letterSpacing: '-3px' }}>
+            Elevate Your <span style={{ color: '#3B82F6' }}>On-Chain DNA.</span>
           </h1>
 
           {!isConnected ? (
-            <div style={{ maxWidth: '450px' }}>
-              <p style={{ color: '#52525B', fontSize: '1.1rem', lineHeight: '1.6', marginBottom: '30px' }}>
-                Connect your wallet to synchronize your transaction history and establish your official architect rank.
-              </p>
-              <div style={{ display: 'flex', gap: '20px', opacity: 0.3 }}>
-                 <Globe size={18} /> <Zap size={18} /> <Layers size={18} />
-              </div>
-            </div>
+            <p style={{ color: '#71717A', fontSize: '1.1rem' }}>Connect your wallet to synchronize your reputation score.</p>
           ) : (
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '25px', textAlign: 'left' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '30px' }}>
               
-              {/* Score Card */}
-              <div style={{ background: 'rgba(255,255,255,0.02)', padding: '35px', borderRadius: '30px', border: '1px solid rgba(255,255,255,0.04)', transition: '0.3s' }}>
-                <p style={{ color: '#3F3F46', fontSize: '9px', fontWeight: 'bold', letterSpacing: '2px', marginBottom: '10px', textTransform: 'uppercase' }}>PROTOCOL SCORE</p>
-                <div style={{ fontSize: '4.5rem', fontWeight: '900', fontStyle: 'italic', color: 'white' }}>{loading ? "..." : score}</div>
+              <div style={{ background: 'rgba(255,255,255,0.02)', padding: '35px', borderRadius: '25px', border: '1px solid rgba(255,255,255,0.05)' }}>
+                <p style={{ color: '#3F3F46', fontSize: '9px', fontWeight: 'bold', marginBottom: '15px', textTransform: 'uppercase' }}>Protocol Score</p>
+                <div style={{ fontSize: '5rem', fontWeight: '900', fontStyle: 'italic', marginBottom: '20px' }}>{loading ? "..." : score}</div>
+                <div style={{ display: 'flex', gap: '10px' }}>
+                  <button onClick={handleShareWarpcast} style={{ flex: 1, padding: '12px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px', color: 'white', cursor: 'pointer', fontSize: '10px', fontWeight: 'bold' }}>Share Cast</button>
+                  <button onClick={handleShareX} style={{ flex: 1, padding: '12px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px', color: 'white', cursor: 'pointer', fontSize: '10px', fontWeight: 'bold' }}>Share X</button>
+                </div>
               </div>
 
-              {/* Rank & Mint Card */}
-              <div style={{ background: 'rgba(255,255,255,0.02)', padding: '35px', borderRadius: '30px', border: '1px solid rgba(255,255,255,0.04)', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+              <div style={{ background: 'rgba(255,255,255,0.02)', padding: '35px', borderRadius: '25px', border: '1px solid rgba(255,255,255,0.05)', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
                 <div>
-                  <p style={{ color: '#3F3F46', fontSize: '9px', fontWeight: 'bold', letterSpacing: '2px', marginBottom: '10px', textTransform: 'uppercase' }}>CURRENT STATUS</p>
-                  <div style={{ fontSize: '1.6rem', fontWeight: 'bold', color: '#60A5FA', textTransform: 'uppercase' }}>
-                    {loading ? "Scanning..." : (score && score > 800 ? "ELITE ARCHITECT" : "BASE BUILDER")}
-                  </div>
+                  <p style={{ color: '#3F3F46', fontSize: '9px', fontWeight: 'bold', marginBottom: '15px', textTransform: 'uppercase' }}>Rank</p>
+                  <div style={{ fontSize: '1.8rem', fontWeight: 'bold', color: '#3B82F6' }}>{loading ? "Scanning..." : (score && score > 800 ? "ELITE ARCHITECT" : "BASE BUILDER")}</div>
                 </div>
-                
-                <div style={{ marginTop: '25px' }}>
-                  <button 
-                    onClick={handleMint}
-                    style={{ width: '100%', padding: '18px', background: '#0052FF', color: 'white', border: 'none', borderRadius: '18px', fontWeight: '900', fontSize: '11px', textTransform: 'uppercase', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px', transition: '0.2s', boxShadow: '0 15px 30px rgba(0,82,255,0.2)' }}
-                    onMouseOver={(e) => e.currentTarget.style.background = '#1E69FF'}
-                    onMouseOut={(e) => e.currentTarget.style.background = '#0052FF'}
-                  >
-                    MINT RANK NFT (0.10$) <ArrowRight size={16} />
-                  </button>
-                  <p style={{ fontSize: '8px', color: '#27272A', textAlign: 'center', marginTop: '12px', fontWeight: 'bold', letterSpacing: '1px' }}>
-                    +1 ON-CHAIN FOOTPRINT TRANSACTION
-                  </p>
-                </div>
+                <button onClick={handleMint} style={{ marginTop: '30px', width: '100%', padding: '20px', background: '#0052FF', color: 'white', border: 'none', borderRadius: '15px', fontWeight: '900', fontSize: '11px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px' }}>
+                  MINT RANK NFT (0.10$) <ArrowRight size={16} />
+                </button>
               </div>
+
             </div>
           )}
         </div>
 
-        {/* Brand Badges Footer */}
-        <div style={{ marginTop: '60px', display: 'flex', gap: '40px', opacity: 0.2, filter: 'grayscale(1)' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '10px', fontWeight: 'bold', letterSpacing: '2px' }}><Cpu size={14} /> BASE NATIVE</div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '10px', fontWeight: 'bold', letterSpacing: '2px' }}><Layers size={14} /> SECURED</div>
+        {/* Leaderboard Section */}
+        <div style={{ width: '100%', maxWidth: '850px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '25px', paddingLeft: '10px' }}>
+            <Trophy size={20} color="#EAB308" />
+            <h2 style={{ fontSize: '1.2rem', fontWeight: '900', textTransform: 'uppercase', letterSpacing: '2px' }}>Global Leaderboard</h2>
+          </div>
+          
+          <div style={{ background: 'rgba(15, 15, 15, 0.4)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '30px', overflow: 'hidden' }}>
+            {leaders.map((leader, i) => (
+              <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '25px 40px', borderBottom: i === leaders.length - 1 ? 'none' : '1px solid rgba(255,255,255,0.05)' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+                  <span style={{ color: i === 0 ? '#EAB308' : '#3F3F46', fontWeight: '900', fontSize: '1.2rem' }}>#{i + 1}</span>
+                  <div>
+                    <div style={{ fontSize: '14px', fontWeight: 'bold', fontFamily: 'monospace', color: 'white' }}>{leader.addr}</div>
+                    <div style={{ fontSize: '10px', color: '#3B82F6', fontWeight: 'bold', marginTop: '2px' }}>{leader.rank}</div>
+                  </div>
+                </div>
+                <div style={{ textAlign: 'right' }}>
+                  <div style={{ fontSize: '1.4rem', fontWeight: '900', fontStyle: 'italic' }}>{leader.score}</div>
+                  <div style={{ fontSize: '8px', color: '#3F3F46', fontWeight: 'bold', letterSpacing: '1px' }}>PTS</div>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
+
       </div>
     </main>
   );
