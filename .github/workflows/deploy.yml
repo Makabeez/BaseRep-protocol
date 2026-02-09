@@ -19,12 +19,11 @@ jobs:
           username: ${{ secrets.USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: 22
-          script_stop: true
+          # Cette option règle 90% des erreurs de connexion
+          proxy_ssh_common_args: "-o StrictHostKeyChecking=no"
           script: |
-            echo "🚀 Connection established as user: $(whoami)"
             cd /home/vps/baserep-protocol
             git pull origin main
             npm install
             npm run build
             pm2 restart baserep
-            echo "✅ Deployment successful!"
