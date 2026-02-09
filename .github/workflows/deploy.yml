@@ -18,8 +18,10 @@ jobs:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
+          # Utilisation de chemins absolus pour éviter les erreurs de contexte
           script: |
-            cd ~/baserep-protocol
+            export PATH=$PATH:/home/vps/.nvm/versions/node/$(node -v)/bin
+            cd /home/vps/baserep-protocol
             git pull origin main
             npm install
             npm run build
