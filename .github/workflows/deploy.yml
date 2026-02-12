@@ -19,8 +19,7 @@ jobs:
           username: ${{ secrets.USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: 22
-          # Crucial pour éviter le rejet de connexion SSH
-          proxy_ssh_common_args: "-o StrictHostKeyChecking=no"
+          # On retire 'proxy_ssh_common_args' qui cause l'erreur
           script: |
             cd /home/vps/baserep-protocol
             git pull origin main
