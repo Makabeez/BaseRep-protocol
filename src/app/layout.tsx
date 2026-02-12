@@ -1,17 +1,13 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { Providers } from './providers';
+import { Providers } from "./providers";
 
 export const metadata: Metadata = {
-  title: "BaseRep Protocol | On-Chain Identity",
-  description: "Establish your professional reputation on the Base blockchain ecosystem.",
-  
-  // Link to the manifest file for Base App compatibility
-  manifest: "/manifest.json",
-
+  title: "BaseRep Protocol",
+  description: "Elevate Your On-Chain DNA",
   openGraph: {
     title: "BaseRep Protocol",
-    description: "Analyze your on-chain footprint and reveal your architect rank.",
+    description: "Elevate Your On-Chain DNA",
     url: "https://baserep.xyz",
     siteName: "BaseRep",
     images: [
@@ -26,7 +22,7 @@ export const metadata: Metadata = {
     type: "website",
   },
 
-  // Farcaster Frames v2 Metadata
+  // Farcaster Frames v2 + Base Verification Metadata
   other: {
     "fc:frame": "vNext",
     "fc:frame:image": "https://baserep.xyz/og-image.png?v=4",
@@ -34,6 +30,8 @@ export const metadata: Metadata = {
     "fc:frame:button:1:action": "link",
     "fc:frame:button:1:target": "https://baserep.xyz",
     "fc:frame:aspect_ratio": "1.91:1",
+    // AJOUT DE LA VÉRIFICATION BASE ICI
+    "base:app_id": "698e57733e2ef73e3a3541e7", 
   },
 };
 
