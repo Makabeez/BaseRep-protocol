@@ -19,7 +19,6 @@ jobs:
           username: ${{ secrets.USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: 22
-          # On utilise les noms de paramètres exacts attendus par l'action
           script: |
             cd /home/vps/baserep-protocol
             git pull origin main
