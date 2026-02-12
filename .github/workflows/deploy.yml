@@ -19,10 +19,11 @@ jobs:
           username: ${{ secrets.USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: 22
-          # Utilisation des entrées valides uniquement
+          # Crucial pour éviter le rejet de connexion SSH
+          proxy_ssh_common_args: "-o StrictHostKeyChecking=no"
           script: |
             cd /home/vps/baserep-protocol
             git pull origin main
             npm install
             npm run build
-            pm2 restart baserep
+            pm2 restart baserep || pm2 start npm --name "baserep" -- start
