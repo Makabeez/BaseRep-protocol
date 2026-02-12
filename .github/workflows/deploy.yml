@@ -12,7 +12,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Deploy to VPS via SSH
+      - name: Deploy to WSL via SSH
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.HOST }}
@@ -24,4 +24,4 @@ jobs:
             git pull origin main
             npm install
             npm run build
-            pm2 restart baserep
+            pm2 restart baserep || pm2 start npm --name "baserep" -- start
