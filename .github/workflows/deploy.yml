@@ -7,21 +7,19 @@ on:
 
 jobs:
   deploy:
-    # Utilise votre runner local en service
     runs-on: self-hosted
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Local build and restart
+      - name: Clean Build and Restart
         run: |
-          # Navigation vers le projet
           cd /home/vps/baserep-protocol
-          # Mise à jour du code
           git pull origin main
-          # Installation et Build
           npm install
+          # Nettoyage pour éviter les styles CSS cassés
+          rm -rf .next
           npm run build
-          # Redémarrage avec PM2
+          # Redémarrage de l'app sur le port 3000
           pm2 restart baserep || pm2 start npm --name "baserep" -- start
           pm2 save
