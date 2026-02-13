@@ -7,32 +7,28 @@ on:
 
 jobs:
   deploy:
-    # Utilise votre runner local configuré en service
+    # Utilise ton runner local configuré en service
     runs-on: self-hosted
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Clean Build and Restart
+      - name: Hard Reset, Clean Build and Refresh PM2
         run: |
-          # Aller dans le dossier du projet
           cd /home/vps/baserep-protocol
           
-          # Mettre à jour le code depuis GitHub
-          git pull origin main
+          # 1. Force la mise à jour du code local
+          git fetch --all
+          git reset --hard origin/main
           
-          # Installer les dépendances
+          # 2. Installation et nettoyage du cache de design
           npm install
-          
-          # --- ÉTAPES DE RÉPARATION DU DESIGN ---
-          # On supprime l'ancien cache pour éviter le design "moche"
           rm -rf .next
           
-          # On reconstruit l'application proprement
+          # 3. Reconstruction complète du site
           npm run build
           
-          # Redémarrage de l'application avec PM2
-          pm2 restart baserep || pm2 start npm --name "baserep" -- start
-          
-          # Sauvegarder la configuration PM2
+          # 4. Rafraîchissement total de PM2 pour vider la mémoire
+          pm2 delete baserep || true
+          pm2 start npm --name "baserep" -- start
           pm2 save
