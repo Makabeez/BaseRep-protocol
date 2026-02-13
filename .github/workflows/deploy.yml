@@ -24,10 +24,11 @@ jobs:
           # Installer les dépendances
           npm install
           
-          # NETTOYAGE : Supprime le cache Next.js pour corriger le design
+          # --- ÉTAPES DE RÉPARATION DU DESIGN ---
+          # On supprime l'ancien cache pour éviter le design "moche"
           rm -rf .next
           
-          # Reconstruction propre de l'application
+          # On reconstruit l'application proprement
           npm run build
           
           # Redémarrage de l'application avec PM2
