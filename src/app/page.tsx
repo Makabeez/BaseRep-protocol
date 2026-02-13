@@ -4,7 +4,6 @@ import { isAddress } from 'viem';
 import { EAS, SchemaEncoder } from "@ethereum-attestation-service/eas-sdk";
 import { ethers } from "ethers";
 
-// Configuration officielle EAS sur Base
 const EAS_CONTRACT_ADDRESS = "0x4200000000000000000000000000000000000021";
 
 const LEADERBOARD_DATA = [
@@ -29,8 +28,7 @@ export default function LeaderboardPage() {
       return;
     }
     setError("");
-    // Simulation du résultat (À lier à ton backend plus tard)
-    setFoundData(LEADERBOARD_DATA[0]);
+    setFoundData(LEADERBOARD_DATA[0]); // Simulation de donnée trouvée
   };
 
   const handleAttest = async () => {
@@ -42,7 +40,6 @@ export default function LeaderboardPage() {
       const eas = new EAS(EAS_CONTRACT_ADDRESS);
       eas.connect(signer);
 
-      // Correspondance exacte avec ton schéma #1074
       const schemaEncoder = new SchemaEncoder("string rank, uint256 points");
       const encodedData = schemaEncoder.encodeData([
         { name: "rank", value: foundData.rank, type: "string" },
@@ -63,7 +60,7 @@ export default function LeaderboardPage() {
       alert("DNA Certifié sur Base ! UID: " + uid);
     } catch (err) {
       console.error(err);
-      alert("Erreur lors de l'attestation. Assurez-vous d'être sur le réseau Base.");
+      alert("Erreur d'attestation. Vérifiez votre wallet Base.");
     } finally {
       setIsAttesting(false);
     }
@@ -71,7 +68,7 @@ export default function LeaderboardPage() {
 
   return (
     <div className="min-h-screen bg-black text-white font-sans p-8">
-      {/* Navigation */}
+      {/* Header */}
       <div className="flex justify-between items-center max-w-6xl mx-auto mb-12">
         <div className="flex items-center gap-2">
           <div className="bg-blue-600 p-1.5 rounded-md"><span className="font-bold text-xs">✓</span></div>
@@ -80,13 +77,13 @@ export default function LeaderboardPage() {
         <button 
           onClick={handleAttest}
           disabled={!foundData || isAttesting}
-          className={`${foundData ? 'bg-blue-600 hover:bg-blue-500' : 'bg-zinc-800 cursor-not-allowed'} text-white px-6 py-2 rounded-xl font-bold transition-all shadow-lg shadow-blue-900/20`}
+          className={`${foundData ? 'bg-blue-600 hover:bg-blue-500' : 'bg-zinc-800 cursor-not-allowed'} text-white px-6 py-2 rounded-xl font-bold transition-all shadow-lg`}
         >
           {isAttesting ? "Certification..." : "Verify Identity on Base"}
         </button>
       </div>
 
-      {/* Hero Section */}
+      {/* Hero */}
       <div className="max-w-4xl mx-auto text-center mb-16 py-24 px-10 bg-zinc-900/40 rounded-[50px] border border-zinc-800/50 backdrop-blur-sm">
         <h1 className="text-6xl md:text-8xl font-black mb-4 tracking-tight leading-none">
           Elevate Your <span className="text-blue-600">On-Chain DNA.</span>
@@ -100,20 +97,16 @@ export default function LeaderboardPage() {
           <input 
             type="text"
             placeholder="Paste address (0x...)"
-            className="bg-transparent p-3 flex-1 text-white focus:outline-none placeholder:text-zinc-600"
+            className="bg-transparent p-3 flex-1 text-white focus:outline-none"
             value={searchAddress}
             onChange={(e) => setSearchAddress(e.target.value)}
           />
-          <button 
-            onClick={handleCheck}
-            className="bg-zinc-100 text-black hover:bg-white px-8 py-3 rounded-xl font-bold transition-all"
-          >
+          <button onClick={handleCheck} className="bg-zinc-100 text-black hover:bg-white px-8 py-3 rounded-xl font-bold transition-all">
             Check
           </button>
         </div>
-        {error && <p className="text-red-500 text-xs font-bold">{error}</p>}
         {foundData && (
-           <div className="bg-blue-600/10 border border-blue-600/30 p-6 rounded-3xl w-full text-center animate-in fade-in zoom-in">
+           <div className="bg-blue-600/10 border border-blue-600/30 p-6 rounded-3xl w-full text-center">
              <p className="text-2xl font-black text-white">{foundData.rank}</p>
              <p className="text-zinc-400 text-sm font-bold">{foundData.pts} PTS ON BASE</p>
            </div>

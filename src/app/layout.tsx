@@ -4,8 +4,9 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "BASEREP - On-Chain DNA",
   description: "Verify your reputation on Base",
+  // Tag de vérification indispensable pour Base.dev
   other: {
-    "base:app_id": "698e57733e2ef73e3a3541e7", // Ton ID de vérification
+    "base:app_id": "698e57733e2ef73e3a3541e7",
   },
 };
 
