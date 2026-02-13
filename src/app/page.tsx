@@ -5,14 +5,12 @@ import { EAS, SchemaEncoder } from "@ethereum-attestation-service/eas-sdk";
 import { ethers } from "ethers";
 
 const EAS_CONTRACT_ADDRESS = "0x4200000000000000000000000000000000000021";
+const SCHEMA_UID = "0x9f680f50ebed1dc06b17b9a5461ee44496fae9b5e82b985634353f9c7054085e";
 
 export default function LeaderboardPage() {
   const [searchAddress, setSearchAddress] = useState("");
-  const [foundData, setFoundData] = useState<any>(null);
+  const [foundData, setFoundData] = useState<{rank: string, pts: number} | null>(null);
   const [isAttesting, setIsAttesting] = useState(false);
-
-  // Ton UID de schéma #1074 validé sur Base
-  const SCHEMA_UID = "0x9f680f50ebed1dc06b17b9a5461ee44496fae9b5e82b985634353f9c7054085e";
 
   const handleCheck = () => {
     if (isAddress(searchAddress)) {
@@ -21,10 +19,13 @@ export default function LeaderboardPage() {
   };
 
   const handleAttest = async () => {
-    if (!foundData) return;
+    if (!foundData || !isAddress(searchAddress)) return;
     setIsAttesting(true);
     try {
-      const provider = new ethers.BrowserProvider(window.ethereum);
+      const { ethereum } = window as any;
+      if (!ethereum) throw new Error("Wallet non détecté");
+
+      const provider = new ethers.BrowserProvider(ethereum);
       const signer = await provider.getSigner();
       const eas = new EAS(EAS_CONTRACT_ADDRESS);
       eas.connect(signer);
@@ -39,15 +40,15 @@ export default function LeaderboardPage() {
         schema: SCHEMA_UID,
         data: { 
           recipient: searchAddress, 
-          expirationTime: BigInt(0), // Correction sécurisée pour le build
+          expirationTime: BigInt(0), // Correction pour Next.js/TS ES2020
           revocable: true, 
           data: encodedData 
         },
       });
       await tx.wait();
-      alert("DNA Certifié !");
-    } catch (err) {
-      alert("Erreur d'attestation.");
+      alert("DNA Certifié avec succès sur Base !");
+    } catch (err: any) {
+      alert("Erreur: " + (err.message || "Transaction échouée"));
     } finally {
       setIsAttesting(false);
     }
@@ -61,11 +62,11 @@ export default function LeaderboardPage() {
           <span className="font-bold tracking-tighter text-xl italic uppercase">BASEREP</span>
         </div>
         <button 
-          onClick={handleAttest} 
-          disabled={!foundData || isAttesting} 
-          className={`${foundData ? 'bg-blue-600' : 'bg-zinc-800'} text-white px-6 py-2 rounded-xl font-bold transition-all`}
+          onClick={handleAttest}
+          disabled={!foundData || isAttesting}
+          className={`${foundData ? 'bg-blue-600 hover:bg-blue-500' : 'bg-zinc-800'} text-white px-6 py-2 rounded-xl font-bold transition-all`}
         >
-          {isAttesting ? "Certification..." : "Verify Identity on Base"}
+          {isAttesting ? "Signature..." : "Verify Identity on Base"}
         </button>
       </div>
       
@@ -76,7 +77,6 @@ export default function LeaderboardPage() {
       </div>
 
       <div className="max-w-xl mx-auto flex flex-col items-center gap-4">
-        <p className="text-zinc-500 text-sm font-medium uppercase">Check your DNA without minting</p>
         <div className="flex gap-2 w-full p-1 bg-zinc-900 border border-zinc-800 rounded-2xl">
           <input 
             type="text" 
@@ -92,7 +92,7 @@ export default function LeaderboardPage() {
         {foundData && (
           <div className="bg-blue-600/10 border border-blue-600/30 p-6 rounded-3xl w-full text-center">
             <p className="text-2xl font-black">{foundData.rank}</p>
-            <p className="text-zinc-400 text-sm font-bold uppercase">{foundData.pts} PTS ON BASE</p>
+            <p className="text-zinc-400 text-sm font-bold">{foundData.pts} PTS ON BASE</p>
           </div>
         )}
       </div>

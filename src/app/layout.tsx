@@ -1,12 +1,12 @@
-import type { Metadata } from 'next';
-import './globals.css';
+import type { Metadata } from "next";
+import "./globals.css";
 
-// Configuration recommandée pour Next.js (App Router)
+// Configuration Metadata pour Next.js 15+
 export const metadata: Metadata = {
-  title: 'BASEREP - On-Chain DNA',
-  description: 'Verify your reputation on Base',
+  title: "BASEREP - On-Chain DNA",
+  description: "Verify your reputation on Base",
   other: {
-    'base:app_id': '698e57733e2ef73e3a3541e7', // Ton ID de vérification unique
+    "base:app_id": "698e57733e2ef73e3a3541e7", // Ton ID de vérification
   },
 };
 
@@ -17,7 +17,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="fr">
-      <body className="antialiased">{children}</body>
+      <body className="antialiased">
+        {children}
+      </body>
     </html>
   );
 }
