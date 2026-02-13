@@ -1,127 +1,109 @@
 "use client";
-import { ConnectButton } from '@rainbow-me/rainbowkit';
-import { useAccount, useSendTransaction } from 'wagmi';
-import { useEffect, useState } from 'react';
-import { ethers } from 'ethers';
-import { parseEther } from 'viem';
-import { ShieldCheck, Trophy } from 'lucide-react';
+import { useState } from 'react';
+import { isAddress } from 'viem'; // Utilise viem déjà installé
 
-export default function Home() {
-  const { address, isConnected } = useAccount();
-  const [score, setScore] = useState<number | null>(null);
-  const [loading, setLoading] = useState(false);
-  const { sendTransaction } = useSendTransaction();
+// Données fictives pour le leaderboard (à remplacer par tes data réelles plus tard)
+const LEADERBOARD_DATA = [
+  { id: 1, address: "0x2f22...Ed1C", rank: "ELITE ARCHITECT", pts: 1000 },
+  { id: 2, address: "0x89b2...4f12", rank: "ELITE ARCHITECT", pts: 980 },
+  { id: 3, address: "0x33c1...99aa", rank: "BASE BUILDER", pts: 750 },
+];
 
-  // Ton adresse de réception (Main Wallet)
-  const MY_WALLET = "0x2f225F8A538e7fD613e8ba79DCDdC7D1422AEd1C"; 
-  
-  // Ton App ID pour l'attribution ERC-8021
-  const BUILDER_APP_ID = "0x698e57733e2ef73e3a3541e7";
+export default function LeaderboardPage() {
+  const [searchAddress, setSearchAddress] = useState("");
+  const [error, setError] = useState("");
+  const [foundData, setFoundData] = useState<any>(null);
 
-  const leaders = [
-    { addr: "0x2f22...Ed1C", rank: "Elite Architect", score: 1000 },
-    { addr: "0x89b2...4f12", rank: "Elite Architect", score: 980 },
-    { addr: "0x33c1...99aa", rank: "Base Builder", score: 750 },
-  ];
-
-  useEffect(() => {
-    async function getScore() {
-      if (isConnected && address) {
-        setLoading(true);
-        try {
-          const provider = new ethers.JsonRpcProvider("https://mainnet.base.org");
-          const txs = await provider.getTransactionCount(address);
-          setScore(Math.min(txs * 12, 1000));
-        } catch (e) { console.error(e); }
-        setLoading(false);
-      }
+  const handleCheck = () => {
+    if (!isAddress(searchAddress)) {
+      setError("Adresse invalide. Veuillez entrer une adresse 0x...");
+      setFoundData(null);
+      return;
     }
-    getScore();
-  }, [isConnected, address]);
-
-  const handleMint = () => {
-    sendTransaction({
-      to: MY_WALLET as `0x${string}`,
-      value: parseEther('0.00004'),
-      // Intégration ERC-8021 pour l'attribution officielle Base
-      data: BUILDER_APP_ID as `0x${string}`, 
-    });
-  };
-
-  const handleShareWarpcast = () => {
-    const text = `🛡️ My BaseRep Protocol Score is ${score}/1000!%0A%0AAnalyze your on-chain DNA at https://baserep.xyz%0A%0A@base @jessepollak #BaseRep`;
-    window.open(`https://warpcast.com/~/compose?text=${text}`, '_blank');
-  };
-
-  const handleShareX = () => {
-    const text = `🛡️ My BaseRep Protocol Score is ${score}/1000!%0A%0AAnalyze your on-chain DNA at https://baserep.xyz%0A%0A@base @jessepollak #BaseRep #BuildOnBase`;
-    window.open(`https://twitter.com/intent/tweet?text=${text}`, '_blank');
+    setError("");
+    
+    // Logique de recherche simple dans les data locales pour le test
+    const result = LEADERBOARD_DATA.find(item => 
+      item.address.toLowerCase().includes(searchAddress.toLowerCase().slice(0, 6))
+    );
+    
+    setFoundData(result || "Pas de données trouvées pour cette adresse.");
   };
 
   return (
-    <main className="min-h-screen text-white bg-black font-sans pb-24">
-      <nav className="flex justify-between items-center px-10 py-5 border-b border-white/5">
-        <div className="flex items-center gap-3">
-          <div className="p-2 bg-[#0052FF] rounded-lg"><ShieldCheck size={20} /></div>
-          <span className="font-black italic uppercase tracking-tighter">BASEREP</span>
+    <div className="min-h-screen bg-black text-white font-sans p-8">
+      {/* Header & Logo */}
+      <div className="flex justify-between items-center max-w-6xl mx-auto mb-12">
+        <div className="flex items-center gap-2">
+          <div className="bg-blue-600 p-1.5 rounded-md">
+            <span className="font-bold text-xs text-white">✓</span>
+          </div>
+          <span className="font-bold tracking-tighter text-xl italic text-zinc-100">BASEREP</span>
         </div>
-        <ConnectButton label="Verify Identity" />
-      </nav>
+        <button className="bg-blue-600 hover:bg-blue-500 text-white px-6 py-2 rounded-xl font-bold transition-all">
+          Verify Identity
+        </button>
+      </div>
 
-      <div className="flex flex-col items-center mt-16 px-5 text-center">
-        <div className="bg-[#0f0f0f]/60 border border-white/5 p-12 rounded-[40px] max-w-[850px] w-full backdrop-blur-xl">
-          <h1 className="text-6xl md:text-7xl font-black mb-10 tracking-tighter leading-none">
-            Elevate Your <span className="text-blue-500">On-Chain DNA.</span>
-          </h1>
+      {/* Hero Section */}
+      <div className="max-w-3xl mx-auto text-center mb-16 py-20 px-10 bg-zinc-900/50 rounded-[40px] border border-zinc-800">
+        <h1 className="text-5xl md:text-7xl font-black mb-4 tracking-tight leading-none">
+          Elevate Your <span className="text-blue-600">On-Chain DNA.</span>
+        </h1>
+      </div>
 
-          {isConnected && (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 text-left">
-              <div className="bg-white/5 p-8 rounded-3xl border border-white/5">
-                <div className="text-8xl font-black italic">{loading ? "..." : score}</div>
-                <div className="flex gap-3 mt-6">
-                  <button onClick={handleShareWarpcast} className="flex-1 py-3 bg-white/5 rounded-xl hover:bg-white/10 transition-colors">Share Cast</button>
-                  <button onClick={handleShareX} className="flex-1 py-3 bg-white/5 rounded-xl hover:bg-white/10 transition-colors">Share X</button>
+      {/* NEW: Search Address Section */}
+      <div className="max-w-xl mx-auto mb-12 flex flex-col items-center gap-4">
+        <p className="text-zinc-400 text-sm">Check your DNA without minting</p>
+        <div className="flex gap-2 w-full">
+          <input 
+            type="text"
+            placeholder="Paste address (0x...)"
+            className="bg-zinc-900/80 border border-zinc-800 rounded-xl p-3 flex-1 text-white focus:outline-none focus:border-blue-600 transition-colors"
+            value={searchAddress}
+            onChange={(e) => setSearchAddress(e.target.value)}
+          />
+          <button 
+            onClick={handleCheck}
+            className="bg-zinc-100 text-black hover:bg-white px-6 py-3 rounded-xl font-bold transition-all"
+          >
+            Check
+          </button>
+        </div>
+        {error && <p className="text-red-500 text-xs">{error}</p>}
+        {foundData && typeof foundData === 'object' && (
+           <div className="bg-blue-600/10 border border-blue-600/50 p-4 rounded-xl w-full text-center">
+             <p className="text-blue-400 text-sm">Rank: <span className="font-bold text-white">{foundData.rank}</span></p>
+             <p className="text-blue-400 text-sm">Score: <span className="font-bold text-white">{foundData.pts} PTS</span></p>
+           </div>
+        )}
+      </div>
+
+      {/* Global Leaderboard */}
+      <div className="max-w-2xl mx-auto">
+        <div className="flex items-center gap-2 mb-6 text-zinc-400">
+          <span className="text-yellow-500">🏆</span>
+          <span className="text-xs font-bold tracking-widest uppercase">Global Leaderboard</span>
+        </div>
+
+        <div className="bg-zinc-900/30 rounded-3xl border border-zinc-900 overflow-hidden">
+          {LEADERBOARD_DATA.map((item) => (
+            <div key={item.id} className="flex justify-between items-center p-6 border-b border-zinc-900/50 last:border-0 hover:bg-zinc-800/20 transition-colors">
+              <div className="flex items-center gap-4">
+                <span className="text-zinc-500 font-bold">#{item.id}</span>
+                <div className="flex flex-col">
+                  <span className="font-mono text-sm font-bold">{item.address}</span>
+                  <span className="text-[10px] font-bold text-blue-500 tracking-wider">{item.rank}</span>
                 </div>
               </div>
-              <div className="bg-white/5 p-8 rounded-3xl border border-white/5 flex flex-col justify-between">
-                <div>
-                  <div className="text-2xl font-bold text-blue-500 uppercase">
-                    {loading ? "Scanning..." : (score && score > 800 ? "ELITE ARCHITECT" : "BASE BUILDER")}
-                  </div>
-                  <p className="text-white/40 text-sm mt-2">Rank attributed based on activity.</p>
-                </div>
-                <button onClick={handleMint} className="w-full py-5 bg-[#0052FF] rounded-2xl font-black text-xl hover:scale-[1.02] transition-transform active:scale-95">
-                  MINT RANK NFT (0.10$)
-                </button>
+              <div className="flex flex-col items-end">
+                <span className="text-lg font-black">{item.pts}</span>
+                <span className="text-[8px] font-bold text-zinc-600 tracking-widest uppercase">PTS</span>
               </div>
             </div>
-          )}
-        </div>
-
-        <div className="w-full max-w-[850px] mt-12 text-left">
-          <div className="flex items-center gap-3 mb-6">
-            <Trophy size={20} className="text-yellow-500" /> 
-            <h2 className="font-black uppercase tracking-widest text-sm text-white/60">Global Leaderboard</h2>
-          </div>
-          <div className="bg-[#0f0f0f]/40 border border-white/5 rounded-[30px] overflow-hidden">
-            {leaders.map((leader, i) => (
-              <div key={i} className="flex justify-between items-center p-6 border-b border-white/5 hover:bg-white/5 transition-colors">
-                <div className="flex items-center gap-5">
-                  <span className={`text-xl font-black ${i === 0 ? 'text-yellow-500' : 'text-zinc-700'}`}>#{i + 1}</span>
-                  <div>
-                    <div className="font-mono font-bold">{leader.addr}</div>
-                    <div className="text-[10px] text-blue-500 uppercase font-black">{leader.rank}</div>
-                  </div>
-                </div>
-                <div className="text-right">
-                  <div className="text-2xl font-black tracking-tighter">{leader.score}</div>
-                  <div className="text-[8px] text-zinc-600 font-bold uppercase">PTS</div>
-                </div>
-              </div>
-            ))}
-          </div>
+          ))}
         </div>
       </div>
-    </main>
+    </div>
   );
 }
