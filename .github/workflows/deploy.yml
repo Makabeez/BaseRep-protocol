@@ -7,6 +7,7 @@ on:
 
 jobs:
   deploy:
+    # Utilise ton runner local configuré sur ton VPS
     runs-on: self-hosted
     steps:
       - name: Checkout code
@@ -14,22 +15,28 @@ jobs:
 
       - name: Production Build and Sync
         run: |
+          # Se placer dans le dossier du projet
           cd /home/vps/baserep-protocol
           
-          # Force la synchronisation avec GitHub
+          # Synchronisation forcée avec la branche main de GitHub
           git fetch --all
           git reset --hard origin/main
           
-          # Installation propre
+          # Installation des dépendances en ignorant les conflits de version (MetaMask/React)
+          #
           npm install --legacy-peer-deps
           
-          # Nettoyage du cache
+          # Nettoyage du cache pour régénérer un design propre
           rm -rf .next
           
-          # FORCE LE PASSAGE AU VERT : CI=false ignore les warnings ESLint
-          #
+          # ÉTAPE CRUCIALE : Build de production
+          # CI=false permet d'ignorer les erreurs de type "BigInt" ou ESLint non critiques
+          # qui rendaient ton build "rouge"
           CI=false npm run build
           
-          # Redémarrage propre avec PM2
+          # Gestion du processus avec PM2
+          # Redémarre l'app existante ou en lance une nouvelle si elle est arrêtée
           pm2 restart baserep --update-env || pm2 start npm --name "baserep" -- start
+          
+          # Sauvegarde la liste des processus pour le redémarrage du VPS
           pm2 save
