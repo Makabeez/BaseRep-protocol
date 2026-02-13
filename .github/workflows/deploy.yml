@@ -12,24 +12,23 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Rebuild from scratch
+      - name: Full Production Rebuild
         run: |
           cd /home/vps/baserep-protocol
           
-          # On nettoie tout le dossier pour repartir à zéro comme au début
+          # Synchronisation du code
+          git fetch --all
           git reset --hard origin/main
           
-          # Réinstallation propre
-          npm install
+          # Installation propre avec gestion des conflits
+          npm install --legacy-peer-deps
           
-          # On supprime les dossiers de cache qui bloquent le design
+          # Nettoyage profond pour le design
           rm -rf .next
-          rm -rf node_modules/.cache
           
-          # Build complet
+          # Reconstruction du site (le build qui vient de réussir !)
           npm run build
           
-          # On relance PM2 proprement en pointant sur le script de démarrage
-          pm2 delete baserep || true
-          pm2 start npm --name "baserep" -- start
+          # Rafraîchissement complet du processus PM2
+          pm2 restart baserep --update-env || pm2 start npm --name "baserep" -- start
           pm2 save
