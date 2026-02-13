@@ -7,6 +7,7 @@ on:
 
 jobs:
   deploy:
+    # Utilise votre runner local configuré en service
     runs-on: self-hosted
     steps:
       - name: Checkout code
@@ -14,12 +15,23 @@ jobs:
 
       - name: Clean Build and Restart
         run: |
+          # Aller dans le dossier du projet
           cd /home/vps/baserep-protocol
+          
+          # Mettre à jour le code depuis GitHub
           git pull origin main
+          
+          # Installer les dépendances
           npm install
-          # Nettoyage pour éviter les styles CSS cassés
+          
+          # NETTOYAGE : Supprime le cache Next.js pour corriger le design
           rm -rf .next
+          
+          # Reconstruction propre de l'application
           npm run build
-          # Redémarrage de l'app sur le port 3000
+          
+          # Redémarrage de l'application avec PM2
           pm2 restart baserep || pm2 start npm --name "baserep" -- start
+          
+          # Sauvegarder la configuration PM2
           pm2 save
