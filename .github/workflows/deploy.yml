@@ -7,21 +7,18 @@ on:
 
 jobs:
   deploy:
-    runs-on: ubuntu-latest
+    # On cible ton runner 'self-hosted' que tu viens de configurer
+    runs-on: self-hosted
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Deploy to WSL via SSH
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.USER }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          port: 22
-          script: |
-            cd /home/vps/baserep-protocol
-            git pull origin main
-            npm install
-            npm run build
-            pm2 restart baserep || pm2 start npm --name "baserep" -- start
+      - name: Local build and restart
+        run: |
+          # On se place dans le dossier du projet sur ton Ubuntu
+          cd /home/vps/baserep-protocol
+          git pull origin main
+          npm install
+          npm run build
+          # On redémarre l'app avec PM2
+          pm2 restart baserep || pm2 start npm --name "baserep" -- start
