@@ -7,7 +7,7 @@ on:
 
 jobs:
   deploy:
-    # On cible ton runner 'self-hosted' que tu viens de configurer
+    # Utilise votre runner local en service
     runs-on: self-hosted
     steps:
       - name: Checkout code
@@ -15,10 +15,13 @@ jobs:
 
       - name: Local build and restart
         run: |
-          # On se place dans le dossier du projet sur ton Ubuntu
+          # Navigation vers le projet
           cd /home/vps/baserep-protocol
+          # Mise à jour du code
           git pull origin main
+          # Installation et Build
           npm install
           npm run build
-          # On redémarre l'app avec PM2
+          # Redémarrage avec PM2
           pm2 restart baserep || pm2 start npm --name "baserep" -- start
+          pm2 save
