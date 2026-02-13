@@ -15,16 +15,19 @@ jobs:
       - name: Production Build and Sync
         run: |
           cd /home/vps/baserep-protocol
+          
+          # Force la synchronisation avec GitHub
           git fetch --all
           git reset --hard origin/main
           
-          # Installation propre avec gestion des dépendances héritées
+          # Installation propre
           npm install --legacy-peer-deps
           
-          # Suppression du cache pour éviter les erreurs de style
+          # Nettoyage du cache
           rm -rf .next
           
-          # Build de production (CI=false ignore les warnings ESLint qui font échouer le build)
+          # FORCE LE PASSAGE AU VERT : CI=false ignore les warnings ESLint
+          #
           CI=false npm run build
           
           # Redémarrage propre avec PM2
