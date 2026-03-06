@@ -97,7 +97,10 @@ export default function Home() {
   };
 
   const easScanUrl = txHash ? `https://base.easscan.org/tx/${txHash}` : '';
-  const tweetText = encodeURIComponent(`I just elevated my On-Chain DNA on BaseRep! 🧬✨\n\nMy Ethos Score is ${data.ethosScore}/100 and my AML status is ${data.amlStatus}.\n\nVerify my on-chain reputation here:\n${easScanUrl}\n\n@BuildOnBase @eas_eth`);
+  
+  // The updated viral tweet logic
+  const tweetText = encodeURIComponent(`I just elevated my On-Chain DNA on BaseRep! 🧬✨\n\nMy Ethos Score is ${data.ethosScore}/100 and my AML status is ${data.amlStatus}.\n\nVerify my on-chain reputation here:\n${easScanUrl}\n\nWant to mint yours and show @base your dedication and on-chain print? ⬇️\n🔗 https://baserep.xyz\n\n@BuildOnBase @eas_eth @base @jessepollak`);
+  
   const twitterIntentUrl = `https://twitter.com/intent/tweet?text=${tweetText}`;
 
   return (
@@ -152,7 +155,6 @@ export default function Home() {
           </button>
         )}
 
-        {/* Premium Success Panel */}
         {txHash && (
           <div className="w-full flex flex-col gap-4 animate-in fade-in slide-in-from-bottom-4 duration-500">
             <div className="bg-white/[0.02] border border-green-500/30 p-6 rounded-2xl text-center backdrop-blur-md relative overflow-hidden">
