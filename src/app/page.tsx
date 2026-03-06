@@ -1,101 +1,50 @@
-"use client";
-import { useState } from 'react';
-import { isAddress } from 'viem';
-import { EAS, SchemaEncoder } from "@ethereum-attestation-service/eas-sdk";
-import { ethers } from "ethers";
+'use client';
 
-const EAS_CONTRACT_ADDRESS = "0x4200000000000000000000000000000000000021";
-const SCHEMA_UID = "0x9f680f50ebed1dc06b17b9a5461ee44496fae9b5e82b985634353f9c7054085e";
+import React, { useState } from 'react';
+import ReputationHub from '@/components/ReputationHub';
 
-export default function LeaderboardPage() {
-  const [searchAddress, setSearchAddress] = useState("");
-  const [foundData, setFoundData] = useState<{rank: string, pts: number} | null>(null);
-  const [isAttesting, setIsAttesting] = useState(false);
-
-  const handleCheck = () => {
-    if (isAddress(searchAddress)) {
-      setFoundData({ rank: "ELITE ARCHITECT", pts: 1000 });
-    }
-  };
-
-  const handleAttest = async () => {
-    if (!foundData || !isAddress(searchAddress)) return;
-    setIsAttesting(true);
-    try {
-      const { ethereum } = window as any;
-      if (!ethereum) throw new Error("Wallet non détecté");
-
-      const provider = new ethers.BrowserProvider(ethereum);
-      const signer = await provider.getSigner();
-      const eas = new EAS(EAS_CONTRACT_ADDRESS);
-      eas.connect(signer);
-      
-      const schemaEncoder = new SchemaEncoder("string rank, uint256 points");
-      const encodedData = schemaEncoder.encodeData([
-        { name: "rank", value: foundData.rank, type: "string" },
-        { name: "points", value: foundData.pts, type: "uint256" },
-      ]);
-      
-      const tx = await eas.attest({
-        schema: SCHEMA_UID,
-        data: { 
-          recipient: searchAddress, 
-          expirationTime: BigInt(0), // Correction pour Next.js/TS ES2020
-          revocable: true, 
-          data: encodedData 
-        },
-      });
-      await tx.wait();
-      alert("DNA Certifié avec succès sur Base !");
-    } catch (err: any) {
-      alert("Erreur: " + (err.message || "Transaction échouée"));
-    } finally {
-      setIsAttesting(false);
-    }
-  };
+export default function Home() {
+  const [address, setAddress] = useState('');
 
   return (
-    <div className="min-h-screen bg-black text-white p-8 font-sans">
-      <div className="flex justify-between items-center max-w-6xl mx-auto mb-12">
-        <div className="flex items-center gap-2">
-          <div className="bg-blue-600 p-1.5 rounded-md"><span className="font-bold text-xs text-white">✓</span></div>
-          <span className="font-bold tracking-tighter text-xl italic uppercase">BASEREP</span>
-        </div>
-        <button 
-          onClick={handleAttest}
-          disabled={!foundData || isAttesting}
-          className={`${foundData ? 'bg-blue-600 hover:bg-blue-500' : 'bg-zinc-800'} text-white px-6 py-2 rounded-xl font-bold transition-all`}
-        >
-          {isAttesting ? "Signature..." : "Verify Identity on Base"}
-        </button>
-      </div>
+    <main className="min-h-screen bg-black text-white flex flex-col items-center justify-center p-6 selection:bg-blue-500/30">
       
-      <div className="max-w-4xl mx-auto text-center mb-16 py-24 px-10 bg-zinc-900/40 rounded-[50px] border border-zinc-800/50">
-        <h1 className="text-6xl md:text-8xl font-black mb-4 tracking-tighter leading-none">
+      {/* Hero Section */}
+      <div className="text-center mb-4 max-w-4xl">
+        <h1 className="text-6xl md:text-8xl font-black tracking-tighter leading-[0.9] mb-6">
           Elevate Your <span className="text-blue-600">On-Chain DNA.</span>
         </h1>
+        <p className="text-zinc-500 font-bold text-xl md:text-2xl tracking-tight">
+          Your reputation is now your identity on Base.
+        </p>
       </div>
 
-      <div className="max-w-xl mx-auto flex flex-col items-center gap-4">
-        <div className="flex gap-2 w-full p-1 bg-zinc-900 border border-zinc-800 rounded-2xl">
+      {/* Dynamic Reputation Hub */}
+      <ReputationHub 
+        ethosScore={88} 
+        amlStatus="cleared" 
+      />
+
+      {/* Search Input Section */}
+      <div className="mt-12 w-full max-w-md flex flex-col gap-4">
+        <div className="relative group">
           <input 
             type="text" 
-            placeholder="Paste address (0x...)" 
-            className="bg-transparent p-3 flex-1 text-white focus:outline-none" 
-            value={searchAddress} 
-            onChange={(e) => setSearchAddress(e.target.value)} 
+            value={address}
+            onChange={(e) => setAddress(e.target.value)}
+            placeholder="Paste wallet address (0x...)" 
+            className="w-full bg-zinc-900/50 border border-zinc-800 p-5 rounded-2xl font-bold text-white placeholder:text-zinc-600 focus:outline-none focus:border-blue-600 transition-all"
           />
-          <button onClick={handleCheck} className="bg-zinc-100 text-black px-8 py-3 rounded-xl font-bold">
+          <button className="absolute right-2 top-2 bottom-2 bg-white text-black px-6 rounded-xl font-black text-sm hover:bg-zinc-200 transition-colors uppercase">
             Check
           </button>
         </div>
-        {foundData && (
-          <div className="bg-blue-600/10 border border-blue-600/30 p-6 rounded-3xl w-full text-center">
-            <p className="text-2xl font-black">{foundData.rank}</p>
-            <p className="text-zinc-400 text-sm font-bold">{foundData.pts} PTS ON BASE</p>
-          </div>
-        )}
+        
+        <p className="text-[10px] text-zinc-600 font-bold uppercase tracking-widest text-center">
+          Powered by @EAS_ETH & ETHOS.XYZ
+        </p>
       </div>
-    </div>
+
+    </main>
   );
 }
