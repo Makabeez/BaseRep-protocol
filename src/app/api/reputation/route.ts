@@ -9,17 +9,17 @@ export async function GET(request: Request) {
   }
 
   try {
-    // Calcul d'un score stable basé sur l'adresse
+    // Logique de score STABLE basée sur l'adresse (évite le random)
     const hash = address.toLowerCase().slice(-4);
     const scoreBase = parseInt(hash, 16);
-    const ethosScore = Math.floor((scoreBase / 65535) * 40) + 60; // Stable entre 60 et 100
+    const ethosScore = Math.floor((scoreBase / 65535) * 40) + 60; 
     
     return NextResponse.json({
       ethosScore: ethosScore,
-      amlStatus: ethosScore > 75 ? 'cleared' : 'pending',
-      onChainPts: Math.floor((scoreBase / 65535) * 500) // Restauration des points on-chain
+      amlStatus: ethosScore > 75 ? 'CLEARED' : 'PENDING',
+      onChainPts: Math.floor((scoreBase / 65535) * 500)
     });
   } catch (error) {
-    return NextResponse.json({ ethosScore: 0, amlStatus: 'pending', onChainPts: 0 });
+    return NextResponse.json({ ethosScore: 0, amlStatus: 'PENDING', onChainPts: 0 });
   }
 }

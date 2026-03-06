@@ -5,7 +5,7 @@ import ReputationHub from '@/components/ReputationHub';
 
 export default function Home() {
   const [address, setAddress] = useState('');
-  const [data, setData] = useState({ ethosScore: 0, amlStatus: 'pending', onChainPts: 0 });
+  const [data, setData] = useState({ ethosScore: 0, amlStatus: 'PENDING', onChainPts: 0 });
   const [loading, setLoading] = useState(false);
 
   const handleCheck = async () => {
@@ -20,11 +20,12 @@ export default function Home() {
   };
 
   return (
-    <main className="min-h-screen bg-black text-white flex flex-col items-center justify-center p-6 selection:bg-blue-500/30">
+    <main className="min-h-screen bg-black text-white flex flex-col items-center justify-center p-6">
       <div className="text-center mb-4 max-w-4xl">
         <h1 className="text-6xl md:text-8xl font-black tracking-tighter leading-[0.85] mb-6">
           Elevate Your <span className="text-blue-600">On-Chain DNA.</span>
         </h1>
+        {/* Restauration de l'indicateur On-Chain */}
         {data.onChainPts > 0 && (
           <div className="inline-block bg-blue-600/20 border border-blue-500/30 px-4 py-1 rounded-full text-blue-400 text-[10px] font-black uppercase tracking-tighter">
             {data.onChainPts} pts detected on-chain
@@ -46,8 +47,9 @@ export default function Home() {
           </button>
         </div>
 
+        {/* Restauration du bouton MINT */}
         {data.ethosScore > 0 && (
-          <button className="w-full bg-blue-600 hover:bg-blue-700 text-white py-5 rounded-2xl font-black uppercase tracking-widest transition-all shadow-lg shadow-blue-500/20">
+          <button className="w-full bg-blue-600 hover:bg-blue-700 text-white py-5 rounded-3xl font-black uppercase tracking-widest transition-all shadow-lg shadow-blue-500/20">
             Mint Your Reputation DNA
           </button>
         )}

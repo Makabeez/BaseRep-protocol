@@ -10,20 +10,20 @@ export default function ReputationHub({ ethosScore, amlStatus }: ReputationProps
   if (ethosScore === 0) return null;
 
   return (
-    <div className="flex flex-col gap-6 w-full max-w-2xl mx-auto mt-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
+    <div className="flex flex-col gap-6 w-full max-w-2xl mx-auto mt-8">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {/* Social Reputation Badge */}
-        <div className="bg-zinc-900/40 border border-zinc-800 p-6 rounded-3xl hover:border-blue-500/50 transition-colors">
+        {/* Ethos Score Badge */}
+        <div className="bg-zinc-900/40 border border-zinc-800 p-6 rounded-3xl">
           <Users className="text-blue-500 mb-4" size={24} />
           <h3 className="text-zinc-500 font-black text-xs uppercase tracking-widest mb-1">Ethos Score</h3>
           <span className="text-4xl font-black text-white">{ethosScore}<span className="text-zinc-700 text-xl">/100</span></span>
         </div>
 
-        {/* AML Status Badge */}
-        <div className="bg-zinc-900/40 border border-zinc-800 p-6 rounded-3xl hover:border-green-500/50 transition-colors">
-          <ShieldCheck className={amlStatus === 'cleared' ? "text-green-500" : "text-zinc-600"} size={24} />
+        {/* Compliance/AML Badge */}
+        <div className="bg-zinc-900/40 border border-zinc-800 p-6 rounded-3xl">
+          <ShieldCheck className={amlStatus === 'CLEARED' ? "text-green-500" : "text-zinc-600"} size={24} />
           <h3 className="text-zinc-500 font-black text-xs uppercase tracking-widest mb-1">Compliance</h3>
-          <span className={`text-2xl font-black uppercase ${amlStatus === 'cleared' ? "text-green-500" : "text-zinc-600"}`}>
+          <span className={`text-2xl font-black uppercase ${amlStatus === 'CLEARED' ? "text-green-500" : "text-zinc-600"}`}>
             {amlStatus}
           </span>
         </div>
