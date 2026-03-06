@@ -3,15 +3,39 @@
 import React, { useState } from 'react';
 import { useAccount, useWriteContract } from 'wagmi';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
+import { encodeAbiParameters, parseAbiParameters } from 'viem';
 import ReputationHub from '@/components/ReputationHub';
 
-const ABI = [
-  { 
-    name: 'mintReputation', 
-    type: 'function', 
-    stateMutability: 'nonpayable', 
-    inputs: [{ name: 'score', type: 'uint256' }], 
-    outputs: [] 
+// L'ABI officiel du contrat EAS pour la fonction "attest"
+const EAS_ABI = [
+  {
+    "inputs": [
+      {
+        "components": [
+          { "internalType": "bytes32", "name": "schema", "type": "bytes32" },
+          {
+            "components": [
+              { "internalType": "address", "name": "recipient", "type": "address" },
+              { "internalType": "uint64", "name": "expirationTime", "type": "uint64" },
+              { "internalType": "bool", "name": "revocable", "type": "bool" },
+              { "internalType": "bytes32", "name": "refUID", "type": "bytes32" },
+              { "internalType": "bytes", "name": "data", "type": "bytes" },
+              { "internalType": "uint256", "name": "value", "type": "uint256" }
+            ],
+            "internalType": "struct AttestationRequestData",
+            "name": "data",
+            "type": "tuple"
+          }
+        ],
+        "internalType": "struct AttestationRequest",
+        "name": "request",
+        "type": "tuple"
+      }
+    ],
+    "name": "attest",
+    "outputs": [{ "internalType": "bytes32", "name": "", "type": "bytes32" }],
+    "stateMutability": "payable",
+    "type": "function"
   }
 ] as const;
 
@@ -38,12 +62,39 @@ export default function Home() {
 
   const handleMint = () => {
     if (!isConnected) return alert("Please connect your wallet first!");
-    writeContract({
-      abi: ABI,
-      address: '0x2f225F8A538e7fD613e8ba79DCDdC7D1422AEd1C', // Temporary contract address
-      functionName: 'mintReputation',
-      args: [BigInt(data.ethosScore)],
-    });
+    if (!address.startsWith('0x')) return alert("Please enter a valid address to attest");
+
+    try {
+      // 1. Encodage des données selon ton Schéma EAS (string rank, uint256 points)
+      const rankValue = data.ethosScore > 80 ? 'ELITE' : 'VERIFIED';
+      const pointsValue = BigInt(data.onChainPts > 0 ? data.onChainPts : data.ethosScore);
+
+      const encodedData = encodeAbiParameters(
+        parseAbiParameters('string rank, uint256 points'),
+        [rankValue, pointsValue]
+      );
+
+      // 2. Appel au contrat officiel EAS sur Base
+      writeContract({
+        abi: EAS_ABI,
+        address: '0x4200000000000000000000000000000000000021', // Adresse officielle EAS Base Mainnet
+        functionName: 'attest',
+        args: [{
+          schema: '0x9f680f50ebed1dc06b17b9a5461ee44496fae9b5e82b985634353f9c7054085e', // Ton UID de schéma
+          data: {
+            recipient: address as `0x${string}`,
+            expirationTime: 0n,
+            revocable: true,
+            refUID: '0x0000000000000000000000000000000000000000000000000000000000000000',
+            data: encodedData,
+            value: 0n
+          }
+        }]
+      });
+    } catch (err) {
+      console.error("Error formatting attestation", err);
+      alert("Failed to format attestation data.");
+    }
   };
 
   return (
