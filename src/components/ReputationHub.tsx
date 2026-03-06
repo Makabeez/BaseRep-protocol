@@ -10,28 +10,33 @@ export default function ReputationHub({ ethosScore, amlStatus }: ReputationProps
   if (ethosScore === 0) return null;
 
   return (
-    <div className="flex flex-col gap-6 w-full max-w-2xl mx-auto mt-8">
+    <div className="flex flex-col gap-5 w-full max-w-2xl mx-auto mt-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {/* Ethos Score Badge */}
-        <div className="bg-zinc-900/40 border border-zinc-800 p-6 rounded-3xl">
-          <Users className="text-blue-500 mb-4" size={24} />
-          <h3 className="text-zinc-500 font-black text-xs uppercase tracking-widest mb-1">Ethos Score</h3>
-          <span className="text-4xl font-black text-white">{ethosScore}<span className="text-zinc-700 text-xl">/100</span></span>
+        <div className="relative overflow-hidden bg-white/[0.02] border border-white/[0.05] p-6 rounded-2xl backdrop-blur-xl hover:bg-white/[0.04] transition-all duration-300 group">
+          <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-blue-500/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+          <Users className="text-blue-400 mb-4 opacity-80" size={22} />
+          <h3 className="text-white/40 font-semibold text-[11px] uppercase tracking-[0.2em] mb-1">Ethos Score</h3>
+          <div className="flex items-baseline gap-1">
+            <span className="text-4xl font-medium text-white tracking-tight">{ethosScore}</span>
+            <span className="text-white/30 text-lg">/100</span>
+          </div>
         </div>
 
         {/* Compliance/AML Badge */}
-        <div className="bg-zinc-900/40 border border-zinc-800 p-6 rounded-3xl">
-          <ShieldCheck className={amlStatus === 'CLEARED' ? "text-green-500" : "text-zinc-600"} size={24} />
-          <h3 className="text-zinc-500 font-black text-xs uppercase tracking-widest mb-1">Compliance</h3>
-          <span className={`text-2xl font-black uppercase ${amlStatus === 'CLEARED' ? "text-green-500" : "text-zinc-600"}`}>
+        <div className="relative overflow-hidden bg-white/[0.02] border border-white/[0.05] p-6 rounded-2xl backdrop-blur-xl hover:bg-white/[0.04] transition-all duration-300 group">
+          <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-green-500/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+          <ShieldCheck className={amlStatus === 'CLEARED' ? "text-green-400 opacity-80" : "text-white/40"} size={22} />
+          <h3 className="text-white/40 font-semibold text-[11px] uppercase tracking-[0.2em] mb-1">Compliance</h3>
+          <span className={`text-2xl font-medium tracking-tight ${amlStatus === 'CLEARED' ? "text-green-400" : "text-white/50"}`}>
             {amlStatus}
           </span>
         </div>
       </div>
       
-      <div className="flex items-center justify-center gap-2 bg-blue-600/5 border border-blue-500/10 py-3 rounded-full">
-        <Fingerprint size={14} className="text-blue-500/50" />
-        <span className="text-blue-500/50 text-[10px] font-black uppercase tracking-widest">
+      <div className="flex items-center justify-center gap-2 py-3 opacity-60">
+        <Fingerprint size={14} className="text-blue-400" />
+        <span className="text-blue-400 text-[10px] font-semibold uppercase tracking-widest">
           Verified by EAS & Ethos Protocol
         </span>
       </div>
