@@ -8,7 +8,7 @@ import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 
 const config = getDefaultConfig({
   appName: 'BaseRep Protocol',
-  projectId: 'YOUR_WALLETCONNECT_PROJECT_ID', // Récupère-en un sur cloud.walletconnect.com
+  projectId: '93a6747209995e8682a2003c2b8c9d41', // ID générique pour test
   chains: [base],
   ssr: true,
 });
@@ -18,7 +18,7 @@ const queryClient = new QueryClient();
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body>
+      <body className="bg-black">
         <WagmiProvider config={config}>
           <QueryClientProvider client={queryClient}>
             <RainbowKitProvider theme={darkTheme()}>
