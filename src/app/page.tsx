@@ -96,10 +96,10 @@ export default function Home() {
     }
   };
 
-  const easScanUrl = txHash ? `https://base.easscan.org/tx/${txHash}` : '';
+  // Fixed URL: Pointing to BaseScan which is instant and reliable
+  const baseScanUrl = txHash ? `https://basescan.org/tx/${txHash}` : '';
   
-  // The updated viral tweet logic
-  const tweetText = encodeURIComponent(`I just elevated my On-Chain DNA on BaseRep! 🧬✨\n\nMy Ethos Score is ${data.ethosScore}/100 and my AML status is ${data.amlStatus}.\n\nVerify my on-chain reputation here:\n${easScanUrl}\n\nWant to mint yours and show @base your dedication and on-chain print? ⬇️\n🔗 https://baserep.xyz\n\n@BuildOnBase @eas_eth @base @jessepollak`);
+  const tweetText = encodeURIComponent(`I just elevated my On-Chain DNA on BaseRep! 🧬✨\n\nMy Ethos Score is ${data.ethosScore}/100 and my AML status is ${data.amlStatus}.\n\nVerify my on-chain reputation here:\n${baseScanUrl}\n\nWant to mint yours and show @base your dedication and on-chain print? ⬇️\n🔗 https://baserep.xyz\n\n@BuildOnBase @eas_eth @base @jessepollak`);
   
   const twitterIntentUrl = `https://twitter.com/intent/tweet?text=${tweetText}`;
 
@@ -128,12 +128,13 @@ export default function Home() {
 
       <div className="mt-8 w-full max-w-md flex flex-col gap-5">
         <div className="relative group">
+          {/* Added pr-28 to fix the button overlap issue */}
           <input 
             type="text" 
             value={address} 
             onChange={(e) => setAddress(e.target.value)}
             placeholder="Search address (0x...)" 
-            className="w-full bg-white/[0.03] border border-white/10 p-4 rounded-xl text-white placeholder:text-white/30 focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/50 outline-none transition-all shadow-inner"
+            className="w-full bg-white/[0.03] border border-white/10 p-4 pr-28 rounded-xl text-white placeholder:text-white/30 focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/50 outline-none transition-all shadow-inner"
           />
           <button 
             onClick={handleCheck} 
@@ -163,13 +164,14 @@ export default function Home() {
               <p className="text-white/50 text-sm mb-6">Your DNA is now permanently written on the Base network.</p>
               
               <div className="flex flex-col gap-3">
+                {/* Changed to BaseScan */}
                 <a 
-                  href={easScanUrl} 
+                  href={baseScanUrl} 
                   target="_blank" 
                   rel="noopener noreferrer"
                   className="flex items-center justify-center gap-2 w-full bg-white/[0.05] hover:bg-white/[0.1] border border-white/10 text-white py-3.5 rounded-xl font-medium text-sm transition-colors"
                 >
-                  View on EAS Scan <ExternalLink size={16} className="opacity-70" />
+                  View on BaseScan <ExternalLink size={16} className="opacity-70" />
                 </a>
                 
                 <a 
