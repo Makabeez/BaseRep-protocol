@@ -1,25 +1,31 @@
-import type { Metadata } from "next";
-import "./globals.css";
+'use client';
 
-// Cette structure est la méthode officielle Next.js pour injecter les tags Meta
-export const metadata: Metadata = {
-  title: "BASEREP - On-Chain DNA",
-  description: "Verify your reputation on Base",
-  other: {
-    // Ton ID spécifique fourni par Base.dev
-    "base:app_id": "698e57733e2ef73e3a3541e7",
-  },
-};
+import '@rainbow-me/rainbowkit/styles.css';
+import { getDefaultConfig, RainbowKitProvider, darkTheme } from '@rainbow-me/rainbowkit';
+import { WagmiProvider } from 'wagmi';
+import { base } from 'wagmi/chains';
+import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+const config = getDefaultConfig({
+  appName: 'BaseRep Protocol',
+  projectId: 'YOUR_WALLETCONNECT_PROJECT_ID', // Récupère-en un sur cloud.walletconnect.com
+  chains: [base],
+  ssr: true,
+});
+
+const queryClient = new QueryClient();
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="fr">
-      <body className="antialiased">
-        {children}
+    <html lang="en">
+      <body>
+        <WagmiProvider config={config}>
+          <QueryClientProvider client={queryClient}>
+            <RainbowKitProvider theme={darkTheme()}>
+              {children}
+            </RainbowKitProvider>
+          </QueryClientProvider>
+        </WagmiProvider>
       </body>
     </html>
   );
