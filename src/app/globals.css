@@ -10,13 +10,16 @@
 body {
   background-color: var(--background);
   color: var(--foreground);
-  background-image: radial-gradient(circle at 50% -20%, #1e3a8a 0%, #000000 50%);
+  /* Premium subtle Web3 grid background */
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  background-size: 40px 40px;
   background-attachment: fixed;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Smooth out the selection color */
 ::selection {
   background-color: rgba(59, 130, 246, 0.3);
   color: white;
